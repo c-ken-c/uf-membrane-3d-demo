@@ -1,0 +1,192 @@
+[
+  {
+    "item": "01",
+    "partNumber": "U0109",
+    "drawingCode": "MN-0915E-20",
+    "nameZh": "進氣軟管接頭",
+    "material": "UPVC",
+    "quantity": 1,
+    "description": "9 inch Air Hose Connector, Φ10*3/8 inch",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "bottom_air"
+    ]
+  },
+  {
+    "item": "02",
+    "partNumber": "U0117",
+    "drawingCode": "MN-0915E-18",
+    "nameZh": "進氣塞頭",
+    "material": "ABS",
+    "quantity": 1,
+    "description": "6 inch, Inlet Air Plug 3/8 inch, CU",
+    "note": "原文含 6 inch 與 CU，但材質欄為 ABS；保留原文，適用性與材質待確認。",
+    "locations": [
+      "bottom_air"
+    ]
+  },
+  {
+    "item": "03",
+    "partNumber": "U0119",
+    "drawingCode": "MN-0915E-21",
+    "nameZh": "進氣黑色墊片",
+    "material": "EPDM",
+    "quantity": 1,
+    "description": "9 inch, Black Gasket for Air Inlet",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "bottom_air"
+    ]
+  },
+  {
+    "item": "04",
+    "partNumber": "U0077",
+    "drawingCode": "MN-0915E-22",
+    "nameZh": "底蓋組（含黏合進氣口）",
+    "material": "UPVC",
+    "quantity": 1,
+    "description": "9 inch Bottom Cap Assembly (Air Inlet Bonded with Bottom Cap)",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "bottom"
+    ]
+  },
+  {
+    "item": "05",
+    "partNumber": "U0074",
+    "drawingCode": "MN-0915E-05",
+    "nameZh": "端部不鏽鋼卡箍組",
+    "material": "SUS304",
+    "quantity": 2,
+    "description": "9 inch Stainless Steel Clamp, equipped with M12*70 bolts and nuts (SS304)",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "bottom",
+      "top"
+    ]
+  },
+  {
+    "item": "06",
+    "partNumber": "U0093",
+    "drawingCode": "MN-0915E-08",
+    "nameZh": "大 O 型環",
+    "material": "EPDM",
+    "quantity": 2,
+    "description": "9 inch O-ring 12 (Outer diameter x wire diameter 243 x 7)",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "bottom",
+      "top"
+    ]
+  },
+  {
+    "item": "07",
+    "partNumber": null,
+    "drawingCode": "MN-09XXE-100",
+    "nameZh": "膜組件核心總成",
+    "material": "UPVC",
+    "quantity": 1,
+    "description": "UF-XXXX 9 inch Membrane Module Core",
+    "note": "原圖 P/N 空白；核心為一個 BOM 總成，不應把外殼與膜絲自行改列為原圖零件。",
+    "locations": [
+      "core"
+    ]
+  },
+  {
+    "item": "08",
+    "partNumber": "U0092",
+    "drawingCode": "MN-0915E-06",
+    "nameZh": "小 O 型環",
+    "material": "EPDM",
+    "quantity": 1,
+    "description": "9 inch O-ring 11 (Outer diameter x wire diameter 60 x 4.2)",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "top_center"
+    ]
+  },
+  {
+    "item": "09",
+    "partNumber": "U0097",
+    "drawingCode": "MN-0915E-09",
+    "nameZh": "中央連接件",
+    "material": "UPVC",
+    "quantity": 1,
+    "description": "9 inch Central Connector",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "top_center"
+    ]
+  },
+  {
+    "item": "10",
+    "partNumber": "U0084",
+    "drawingCode": "MN-0915E-02",
+    "nameZh": "DN50 活接",
+    "material": "UPVC",
+    "quantity": 3,
+    "description": "DN50 Coupling",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "bottom_side",
+      "top_side",
+      "top_axial"
+    ]
+  },
+  {
+    "item": "11",
+    "partNumber": "U0085",
+    "drawingCode": "MN-0915E-01",
+    "nameZh": "DN50 端蓋",
+    "material": "UPVC",
+    "quantity": 3,
+    "description": "9 inch DN50 End Cap",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "bottom_side",
+      "top_side",
+      "top_axial"
+    ]
+  },
+  {
+    "item": "12",
+    "partNumber": "U0076",
+    "drawingCode": "MN-0915E-23",
+    "nameZh": "頂蓋組（含黏合濃水接頭）",
+    "material": "UPVC",
+    "quantity": 1,
+    "description": "9 inch Top Cap Assembly (Brine Connector Bonded with Top Cap)",
+    "note": "依爆炸圖確認外形分類；細部尺寸仍待核對。",
+    "locations": [
+      "top"
+    ]
+  },
+  {
+    "item": "13",
+    "partNumber": "U0075",
+    "drawingCode": "TY-036",
+    "nameZh": "筒身固定抱箍組",
+    "material": "SUS304",
+    "quantity": 2,
+    "description": "9 inch Tie Band (Φ225 (60CM), black silicone bushing, with M8x90 bolts and flat washers) (SS304)",
+    "note": "保留抱箍、襯套、螺栓及墊圈為一個 BOM 組，子件可建模但不增加表列數量。",
+    "locations": [
+      "body_lower",
+      "body_upper"
+    ]
+  },
+  {
+    "item": "14",
+    "partNumber": "U0108",
+    "drawingCode": "WG-014",
+    "nameZh": "間隔墊塊",
+    "material": "PE",
+    "quantity": 2,
+    "description": "9 inch Rubber Spacer",
+    "note": "原文 Rubber Spacer、材質欄 PE；名稱與材質用語差異待確認。",
+    "locations": [
+      "body_lower",
+      "body_upper"
+    ]
+  }
+]
