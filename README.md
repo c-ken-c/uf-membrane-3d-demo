@@ -24,3 +24,7 @@
 Node.js 22，執行 `npm ci`、`npm run dev`。`npm run build` 輸出至 `dist`。GitHub Actions 自動部署 main 至 GitHub Pages。
 
 使用 Three.js 和 Vite。介面與模型為本專案建立，未複製 sc-datav 的程式或素材。
+
+## 單支拆解展示
+新增單支 UF 分頁，保留三支 SKID。支援拆開、組合、程度滑桿、零件選取及線框。單支模型目前為 10 個展示分組，尚未完成原爆炸圖 14 項 BOM 的逐件重建；內部與端蓋細節皆為示意。
+

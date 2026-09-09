@@ -1,3 +1,4 @@
+import { createSingle } from './single.js';
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -44,6 +45,7 @@ ground.rotation.x = -Math.PI / 2; ground.position.y = -0.005; ground.receiveShad
 const grid = new THREE.GridHelper(7, 35, 0x2a4e54, 0x173038); grid.position.y = -0.002;
 grid.material.transparent = true; grid.material.opacity = 0.38; scene.add(grid);
 
+const single=createSingle();scene.add(single.root);single.root.visible=false;let singleView=false,explodeCurrent=0,explodeTarget=0;
 const equipment = new THREE.Group(); scene.add(equipment);
 const mat = (color, metalness = 0, roughness = 0.5) => new THREE.MeshStandardMaterial({ color, metalness, roughness });
 const steel = mat(0x6b8790, 0.78, 0.3);
@@ -158,9 +160,18 @@ $('reset').addEventListener('click',()=>{camera.position.copy(initialPosition);c
 $('clear-selection').addEventListener('click',()=>selectModule(null));
 const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();let down=[0,0];
 renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
-renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(pickTargets)[0];if(hit)selectModule(hit.object.userData.module);});
+renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(pickTargets)[0];if(singleView){const p=raycaster.intersectObjects(single.targets)[0];if(p)selectPart(p.object.userData.part);}else if(hit)selectModule(hit.object.userData.module);});
 const observer=new ResizeObserver(()=>{const {width,height}=container.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();});observer.observe(container);
 setMode('filter');$('loading').hidden=true;
+function selectPart(i){single.select(i);$('part-name').textContent=single.parts[i].name;$('part-note').textContent=single.parts[i].note;document.querySelectorAll('[data-part]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.part)===i)));}
+single.parts.forEach((p,i)=>{const b=document.createElement('button');b.textContent=p.name;b.dataset.part=i;b.setAttribute('aria-pressed','false');b.onclick=()=>selectPart(i);$('part-list').appendChild(b);});
+const stageHeading=document.querySelector('.stage-heading'),originalHeading=stageHeading.innerHTML;
+function setView(value){singleView=value;ground.position.y=value?-.95:-.005;grid.position.y=value?-.948:-.002;equipment.visible=!value;single.root.visible=value;flowGroup.visible=!value;$('skid-panel').hidden=value;$('single-panel').hidden=!value;$('section').hidden=value;$('show-single').setAttribute('aria-pressed',String(value));$('show-skid').setAttribute('aria-pressed',String(!value));stageHeading.innerHTML=value?'<span class="eyebrow">SINGLE MODULE / EXPLODED VIEW</span><h1>拆解，看見構造。</h1><p>單支 UF-0915E · 零件結構示意</p>':originalHeading;$('viewport').setAttribute('aria-label',value?'可拆解組合的單支 UF 模型':'可旋轉縮放的三支 UF 與 SKID 模型');$('mode-caption').textContent=value?'單支拆解示意':modeText[mode][0];document.querySelector('.stage-footer small').textContent=value?'拆解位移為展示安排，非維修步驟':'粒子表示流向，非流速比例';camera.position.copy(value?new THREE.Vector3(3.1,2.2,6.5):initialPosition);controls.target.set(0,value?.95:1.1,0);controls.autoRotate=false;$('rotate').setAttribute('aria-pressed','false');controls.update();}
+$('show-single').onclick=()=>setView(true);$('show-skid').onclick=()=>setView(false);
+function setExplode(value){explodeTarget=value;$('explode-range').value=String(Math.round(value*100));$('explode-value').textContent=Math.round(value*100)+'%';}
+$('explode').onclick=()=>setExplode(1);$('assemble').onclick=()=>setExplode(0);$('explode-range').oninput=e=>setExplode(Number(e.target.value)/100);
+$('wireframe').onclick=()=>{const value=$('wireframe').getAttribute('aria-pressed')!=='true';$('wireframe').setAttribute('aria-pressed',String(value));single.root.traverse(o=>{if(o.isMesh)o.material.wireframe=value;});};
+$('reset').addEventListener('click',()=>{if(singleView)setView(true);});
 let activeTime=0,last=performance.now();
-renderer.setAnimationLoop(now=>{const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;if(!document.hidden&&!reducedMotion)activeTime+=dt;for(const f of flows)f.dots.forEach((dot,i)=>dot.position.copy(f.c.getPointAt((activeTime*f.speed+i/f.dots.length)%1)));controls.update();renderer.render(scene,camera);});
+renderer.setAnimationLoop(now=>{const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;explodeCurrent=reducedMotion?explodeTarget:THREE.MathUtils.damp(explodeCurrent,explodeTarget,7,dt);single.update(explodeCurrent);flowGroup.visible=!singleView;if(!document.hidden&&!reducedMotion)activeTime+=dt;for(const f of flows)f.dots.forEach((dot,i)=>dot.position.copy(f.c.getPointAt((activeTime*f.speed+i/f.dots.length)%1)));controls.update();renderer.render(scene,camera);});
 
