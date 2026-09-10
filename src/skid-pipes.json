@@ -1,0 +1,451 @@
+{
+  "units": "mm",
+  "segments": [
+    {
+      "tag": "FW-H01",
+      "service": "原水",
+      "startMm": [
+        -83,
+        552,
+        140
+      ],
+      "endMm": [
+        1267,
+        552,
+        140
+      ],
+      "modelSpanMm": 1350.0,
+      "cutLengthMm": null,
+      "modelODmm": 110,
+      "modelIDmm": 100,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "PW-H01",
+      "service": "產水",
+      "startMm": [
+        -83,
+        552,
+        2140
+      ],
+      "endMm": [
+        1267,
+        552,
+        2140
+      ],
+      "modelSpanMm": 1350.0,
+      "cutLengthMm": null,
+      "modelODmm": 110,
+      "modelIDmm": 100,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "CW-H01",
+      "service": "濃水／上排放",
+      "startMm": [
+        -83,
+        225,
+        2140
+      ],
+      "endMm": [
+        1267,
+        225,
+        2140
+      ],
+      "modelSpanMm": 1350.0,
+      "cutLengthMm": null,
+      "modelODmm": 110,
+      "modelIDmm": 100,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "FW-B1-01",
+      "service": "原水",
+      "startMm": [
+        212,
+        405,
+        295
+      ],
+      "endMm": [
+        212,
+        552,
+        295
+      ],
+      "modelSpanMm": 147.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "FW-B1-02",
+      "service": "原水",
+      "startMm": [
+        212,
+        552,
+        140
+      ],
+      "endMm": [
+        212,
+        552,
+        295
+      ],
+      "modelSpanMm": 155.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "PW-B1-01",
+      "service": "產水",
+      "startMm": [
+        212,
+        405,
+        1925
+      ],
+      "endMm": [
+        212,
+        552,
+        1925
+      ],
+      "modelSpanMm": 147.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "PW-B1-02",
+      "service": "產水",
+      "startMm": [
+        212,
+        552,
+        1925
+      ],
+      "endMm": [
+        212,
+        552,
+        2140
+      ],
+      "modelSpanMm": 215.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "CW-B1-01",
+      "service": "濃水／上排放",
+      "startMm": [
+        212,
+        225,
+        2060
+      ],
+      "endMm": [
+        212,
+        225,
+        2140
+      ],
+      "modelSpanMm": 80.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "FW-B2-01",
+      "service": "原水",
+      "startMm": [
+        592,
+        405,
+        295
+      ],
+      "endMm": [
+        592,
+        552,
+        295
+      ],
+      "modelSpanMm": 147.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "FW-B2-02",
+      "service": "原水",
+      "startMm": [
+        592,
+        552,
+        140
+      ],
+      "endMm": [
+        592,
+        552,
+        295
+      ],
+      "modelSpanMm": 155.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "PW-B2-01",
+      "service": "產水",
+      "startMm": [
+        592,
+        405,
+        1925
+      ],
+      "endMm": [
+        592,
+        552,
+        1925
+      ],
+      "modelSpanMm": 147.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "PW-B2-02",
+      "service": "產水",
+      "startMm": [
+        592,
+        552,
+        1925
+      ],
+      "endMm": [
+        592,
+        552,
+        2140
+      ],
+      "modelSpanMm": 215.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "CW-B2-01",
+      "service": "濃水／上排放",
+      "startMm": [
+        592,
+        225,
+        2060
+      ],
+      "endMm": [
+        592,
+        225,
+        2140
+      ],
+      "modelSpanMm": 80.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "FW-B3-01",
+      "service": "原水",
+      "startMm": [
+        972,
+        405,
+        295
+      ],
+      "endMm": [
+        972,
+        552,
+        295
+      ],
+      "modelSpanMm": 147.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "FW-B3-02",
+      "service": "原水",
+      "startMm": [
+        972,
+        552,
+        140
+      ],
+      "endMm": [
+        972,
+        552,
+        295
+      ],
+      "modelSpanMm": 155.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "PW-B3-01",
+      "service": "產水",
+      "startMm": [
+        972,
+        405,
+        1925
+      ],
+      "endMm": [
+        972,
+        552,
+        1925
+      ],
+      "modelSpanMm": 147.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "PW-B3-02",
+      "service": "產水",
+      "startMm": [
+        972,
+        552,
+        1925
+      ],
+      "endMm": [
+        972,
+        552,
+        2140
+      ],
+      "modelSpanMm": 215.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "CW-B3-01",
+      "service": "濃水／上排放",
+      "startMm": [
+        972,
+        225,
+        2060
+      ],
+      "endMm": [
+        972,
+        225,
+        2140
+      ],
+      "modelSpanMm": 80.0,
+      "cutLengthMm": null,
+      "modelODmm": 60,
+      "modelIDmm": 50,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "PVC-U 暫定",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    },
+    {
+      "tag": "AS-H01",
+      "service": "氣洗空氣",
+      "startMm": [
+        -83,
+        350,
+        155
+      ],
+      "endMm": [
+        1267,
+        350,
+        155
+      ],
+      "modelSpanMm": 1350.0,
+      "cutLengthMm": null,
+      "modelODmm": 63,
+      "modelIDmm": 53,
+      "nominalSize": "待確認；模型外徑不是管制標準",
+      "materialProposed": "待選氣體用途適用材質，不採一般 PVC-U",
+      "materialInDWG": "未確認",
+      "pressureClass": null,
+      "status": "既有模型座標跨度；未扣管件承插／閥體長度"
+    }
+  ],
+  "airHoses": {
+    "quantity": 3,
+    "modelODmm": 10,
+    "modelIDmm": 6,
+    "modelCenterlineLengthEachMm": 109.27,
+    "cutLengthMm": null,
+    "material": "待選額定壓力氣管",
+    "source": "add_air.scr: radius25 quarter arc + 70 straight; 19-point polyline approximation"
+  }
+}

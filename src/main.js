@@ -1,3 +1,4 @@
+import { createSkidServices } from './skid-services.js';
 import { createSingle } from './single.js';
 import './style.css';
 import * as THREE from 'three';
@@ -8,7 +9,7 @@ const container = $('viewport');
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x0a171d, 0.075);
 const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 60);
-const initialPosition = new THREE.Vector3(3.05, 2.25, 4.2);
+const initialPosition = new THREE.Vector3(3.6, 2.5, 5.4);
 camera.position.copy(initialPosition);
 let renderer;
 try {
@@ -105,17 +106,7 @@ for(const [index,x] of [-.38,0,.38].entries()) {
   const halo=ring(.148,.003,0,.4,0,new THREE.MeshBasicMaterial({color:0x7ff4d5}),group);halo.visible=false;
   modules.push({group,body,shellMat,fibers,label,halo});
 }
-function header(z,y,material,r=.055) {
-  pipe([[-.675,y,z],[.675,y,z]],r,material);
-  for(const x of [-.665,.665])ring(r*1.48,r*.34,x,y,z,steel,equipment,'x');
-}
-header(-.327,.14,waterMat);header(-.327,2.14,waterMat);header(0,2.14,wasteMat);header(-.125,.155,airMat,.0315);
-for(const x of [-.38,0,.38]){
-  pipe([[x,.295,-.18],[x,.295,-.28],[x,.255,-.327],[x,.14,-.327]],.027,waterMat);
-  pipe([[x,1.925,-.18],[x,1.925,-.28],[x,1.965,-.327],[x,2.14,-.327]],.027,waterMat);
-  pipe([[x,2.06,0],[x,2.14,0]],.027,wasteMat);
-  pipe([[x,.18,0],[x,.16,-.02],[x,.155,-.07],[x,.155,-.125]],.006,airMat);
-}
+const services=createSkidServices();equipment.add(services.root);
 
 let flowGroup=new THREE.Group();scene.add(flowGroup);
 let flows=[],mode='filter',selected=null,section=false;
@@ -160,8 +151,18 @@ $('reset').addEventListener('click',()=>{camera.position.copy(initialPosition);c
 $('clear-selection').addEventListener('click',()=>selectModule(null));
 const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();let down=[0,0];
 renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
-renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(pickTargets)[0];if(singleView){const p=raycaster.intersectObjects(single.targets)[0];if(p)selectPart(p.object.userData.part);}else if(hit)selectModule(hit.object.userData.module);});
-const observer=new ResizeObserver(()=>{const {width,height}=container.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix();});observer.observe(container);
+renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(pickTargets)[0];if(singleView){const p=raycaster.intersectObjects(single.targets)[0];if(p)selectPart(p.object.userData.part);}else {const hits=raycaster.intersectObjects([...pickTargets,...services.targets]);const first=hits[0];if(first?.object.userData.serviceTag)selectService(first.object.userData.serviceTag);else if(first)selectModule(first.object.userData.module);}});
+let selectedService=null;
+const types={pipe:'原圖管段／軟管',extension:'新增連接段',fitting:'管件',valve:'氣動閥',instrument:'儀表'};
+function spanLabel(o){return o.details.spanMm===undefined?'待確認':`${o.details.spanMm} mm（跨度）`;}
+function selectService(tag){const o=services.items.find(x=>x.tag===tag);if(!o)return;selectedService=o;services.select(tag);$('service-name').textContent=`${tag} · ${o.name}`;$('service-material').textContent=o.details.material;$('service-span').textContent=spanLabel(o);$('service-cut').textContent='待確認';$('service-spec').textContent=o.details.od?`模型 OD ${o.details.od} / ID ${o.details.id} mm；DN及管制待定`:o.details.unit?`單位 ${o.details.unit}；量程待確認；讀值 —（未連線）`:'DN、壓力等級及安裝尺寸待確認';$('service-note').textContent=o.details.note;$('service-focus').hidden=false;document.querySelectorAll('[data-service]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.service===tag)));}
+function renderServiceList(){const filter=$('service-filter').value;const list=$('service-list');list.replaceChildren();services.items.filter(o=>filter==='all'||o.type===filter).forEach(o=>{const b=document.createElement('button');b.dataset.service=o.tag;b.setAttribute('aria-pressed',String(selectedService?.tag===o.tag));const tag=document.createElement('b');tag.textContent=o.tag;const label=document.createElement('span');label.textContent=o.name;const note=document.createElement('small');note.textContent=o.details.spanMm!==undefined?spanLabel(o):types[o.type];b.append(tag,label,note);b.onclick=()=>selectService(o.tag);list.appendChild(b);});$('service-count').textContent=`${list.childElementCount} 個項目`;}
+$('service-filter').onchange=renderServiceList;renderServiceList();
+$('service-focus').onclick=()=>{if(!selectedService)return;const bounds=new THREE.Box3().setFromObject(selectedService.g),center=bounds.getCenter(new THREE.Vector3());const distance=Math.max(.5,bounds.getSize(new THREE.Vector3()).length()*2.4);const direction=camera.position.clone().sub(controls.target).normalize();controls.minDistance=.15;controls.target.copy(center);camera.position.copy(center).addScaledVector(direction,distance);controls.autoRotate=false;$('rotate').setAttribute('aria-pressed','false');controls.update();};
+$('service-tags').onclick=()=>{const on=$('service-tags').getAttribute('aria-pressed')!=='true';$('service-tags').setAttribute('aria-pressed',String(on));services.showBadges(on);};
+$('download-materials').onclick=()=>{const rows=[['編號','分類','名稱','數量','材質（暫定）','模型跨度mm','裁管長度mm','模型ODmm','模型IDmm','儀表單位','讀值','規格狀態'],...services.items.map(o=>[o.tag,types[o.type],o.name,1,o.details.material,o.details.spanMm??'待確認','待確認',o.details.od??'待確認',o.details.id??'待確認',o.details.unit??'',o.type==='instrument'?'未連線':'',o.details.note])];const csv='\ufeff'+rows.map(row=>row.map(cell=>'"'+String(cell).replaceAll('"','""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='UF0915E_SKID_materials_PROVISIONAL.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+if(import.meta.env.DEV)window.__ufServices=()=>services.items.map(o=>({tag:o.tag,type:o.type,details:o.details,meshes:o.g.children.filter(x=>x.isMesh).length}));
+const observer=new ResizeObserver(()=>{const {width,height}=container.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);camera.aspect=width/height;camera.fov=width<650&&!singleView?48:35;camera.updateProjectionMatrix();});observer.observe(container);
 setMode('filter');$('loading').hidden=true;
 let selectedPartIndex=0;
 function selectPart(i){selectedPartIndex=i;$('focus-part').hidden=false;const p=single.parts[i];single.select(i);$('part-name').textContent=p.name;$('part-note').textContent=`${p.location} · ${p.instance} / ${p.row.quantity} 件／組。${p.note}`;$('part-code').textContent=`料號 ${p.row.partNumber||'原表空白'} · ${p.row.drawingCode}`;$('part-material').textContent=`材質 ${p.row.material} · 實例 ${p.id}`;document.querySelectorAll('[data-part]').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.part)===i)));}
@@ -180,13 +181,13 @@ if(import.meta.env.DEV){
  };
 }
 const stageHeading=document.querySelector('.stage-heading'),originalHeading=stageHeading.innerHTML;
-function setView(value){singleView=value;document.body.classList.toggle('single-display',value);controls.minDistance=value?.12:1.6;ground.position.y=value?-1.18:-.005;grid.position.y=value?-1.178:-.002;equipment.visible=!value;single.root.visible=value;flowGroup.visible=!value;$('skid-panel').hidden=value;$('single-panel').hidden=!value;$('section').hidden=value;$('show-single').setAttribute('aria-pressed',String(value));$('show-skid').setAttribute('aria-pressed',String(!value));stageHeading.innerHTML=value?'<span class="eyebrow">SINGLE MODULE / EXPLODED VIEW</span><h1>拆解，看見構造。</h1><p>單支 UF-0915E · 14 項 BOM 對照</p>':originalHeading;$('viewport').setAttribute('aria-label',value?'可拆解組合的單支 UF 模型':'可旋轉縮放的三支 UF 與 SKID 模型');$('mode-caption').textContent=value?'14 項 · 22 件／組':modeText[mode][0];document.querySelector('.stage-footer small').textContent=value?'拆解位移為展示安排，非維修步驟':'粒子表示流向，非流速比例';camera.position.copy(value?new THREE.Vector3(3.3,2.3,8.1):initialPosition);controls.target.set(0,value?.95:1.1,0);controls.autoRotate=false;$('rotate').setAttribute('aria-pressed','false');controls.update();}
+function setView(value){singleView=value;camera.fov=container.clientWidth<650&&!value?48:35;camera.updateProjectionMatrix();document.body.classList.toggle('single-display',value);controls.minDistance=value?.12:1.6;ground.position.y=value?-1.18:-.005;grid.position.y=value?-1.178:-.002;equipment.visible=!value;single.root.visible=value;flowGroup.visible=!value;$('skid-panel').hidden=value;$('single-panel').hidden=!value;$('section').hidden=value;$('show-single').setAttribute('aria-pressed',String(value));$('show-skid').setAttribute('aria-pressed',String(!value));stageHeading.innerHTML=value?'<span class="eyebrow">SINGLE MODULE / EXPLODED VIEW</span><h1>拆解，看見構造。</h1><p>單支 UF-0915E · 14 項 BOM 對照</p>':originalHeading;$('viewport').setAttribute('aria-label',value?'可拆解組合的單支 UF 模型':'可旋轉縮放的三支 UF 與 SKID 模型');$('mode-caption').textContent=value?'14 項 · 22 件／組':modeText[mode][0];document.querySelector('.stage-footer small').textContent=value?'拆解位移為展示安排，非維修步驟':'粒子表示流向，非流速比例';camera.position.copy(value?new THREE.Vector3(3.3,2.3,8.1):initialPosition);controls.target.set(0,value?.95:1.1,0);controls.autoRotate=false;$('rotate').setAttribute('aria-pressed','false');controls.update();}
 $('show-single').onclick=()=>setView(true);$('show-skid').onclick=()=>setView(false);
 if(location.hash==='#single')setView(true);
 function setExplode(value){explodeTarget=value;$('explode-range').value=String(Math.round(value*100));$('explode-value').textContent=Math.round(value*100)+'%';}
 $('explode').onclick=()=>setExplode(1);$('assemble').onclick=()=>setExplode(0);$('explode-range').oninput=e=>setExplode(Number(e.target.value)/100);
 $('wireframe').onclick=()=>{const value=$('wireframe').getAttribute('aria-pressed')!=='true';$('wireframe').setAttribute('aria-pressed',String(value));single.root.traverse(o=>{if(o.isMesh)o.material.wireframe=value;});};
-$('reset').addEventListener('click',()=>{if(singleView)setView(true);});
+$('reset').addEventListener('click',()=>{if(singleView)setView(true);else{controls.minDistance=1.6;services.select(null);}});
 let activeTime=0,last=performance.now();
 renderer.setAnimationLoop(now=>{const dt=Math.max(0,Math.min((now-last)/1000,.05));last=now;explodeCurrent=reducedMotion?explodeTarget:THREE.MathUtils.damp(explodeCurrent,explodeTarget,7,dt);single.update(explodeCurrent);flowGroup.visible=!singleView;if(!document.hidden&&!reducedMotion)activeTime+=dt;for(const f of flows)f.dots.forEach((dot,i)=>dot.position.copy(f.c.getPointAt((activeTime*f.speed+i/f.dots.length)%1)));controls.update();renderer.render(scene,camera);});
 
