@@ -48,3 +48,7 @@ PT-101/102/103、FIT-101/102、AIT-101分別為壓力、流量及產水濁度位
 28個管路項目以廠商尺寸作配置選用，分別為GF PVC-U DIN8061/62 SDR21 PN10：d110×5.3（ID99.4）、d63×3（ID57）；Yamatoku SUS304管60.5×3.9（ID52.7）；Festo PUN-H 10×1.5（ID7）；SMC TL0806 PFA 8×6（壁厚1）。管段內徑標明型錄值或OD-2t計算值，非實測公差尺寸。28段皆提供數值、型號、來源及估長，可獨立下載管段尺寸CSV。非管段改填不適用並另列接管規格。
 
 支管模型外徑由60改63mm，氣洗主管由63改60.5mm；須配合實際UF端口與相容接頭。PU軟管依Festo最小彎曲半徑28mm改為R30弧線與直段，估長仍為每條110mm。型錄規格不等於本案施工核定；PVC PN10以20°C水為基準，溫度／介質需降額。全部來源链接见src/pipe-specs.js及下載CSV。
+
+
+### SKID frame specification
+The frame and support crossbars are provisionally SUS316 (one assembly). The modeled bounding dimensions are W 1184 × D 728 × H 2200 mm, excluding external piping and instruments. The frame is selectable as SKID-001, with toggleable 3D dimensions and dedicated W/D/H columns in the complete material CSV. Member wall thickness, welds and load capacity remain unspecified. Gas piping material specifications are independent of the frame.

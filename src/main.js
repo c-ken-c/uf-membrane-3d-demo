@@ -1,3 +1,4 @@
+import { createFrameDimensions } from './frame-dimensions.js';
 import { createSkidServices } from './skid-services.js';
 import { createSingle } from './single.js';
 import './style.css';
@@ -74,12 +75,17 @@ function pipe(points, radius, material, parent=equipment) {
   const c=curve(points); const m=mesh(new THREE.TubeGeometry(c,Math.max(12,points.length*12),radius,12,false),material,parent);return m;
 }
 // Meter-scale, simplified general-series arrangement. No manufacturer CAD files are distributed.
-for(const z of [-0.503,0.175]) box(0,.05,z,1.184,.1,.05);
-for(const x of [-.567,.567,0])box(x,.05,-.164,.05,.1,.628);
-for(const x of [-.567,.567]) for(const z of [-.503,.175])box(x,1.15,z,.05,2.1,.05);
-for(const z of [-.503,.175])box(0,2.175,z,1.184,.05,.05);
-for(const x of [-.567,.567]) for(const y of [.6,1.6,2.075])box(x,y,-.164,.05,.05,.628);
-for(const y of [.6,1.6])box(0,y,-.165,1.084,.05,.05);
+const frame=new THREE.Group();equipment.add(frame);
+const frameSteel=steel.clone();
+for(const z of [-0.503,0.175]) box(0,.05,z,1.184,.1,.05,frameSteel,frame);
+for(const x of [-.567,.567,0])box(x,.05,-.164,.05,.1,.628,frameSteel,frame);
+for(const x of [-.567,.567]) for(const z of [-.503,.175])box(x,1.15,z,.05,2.1,.05,frameSteel,frame);
+for(const z of [-.503,.175])box(0,2.175,z,1.184,.05,.05,frameSteel,frame);
+for(const x of [-.567,.567]) for(const y of [.6,1.6,2.075])box(x,y,-.164,.05,.05,.628,frameSteel,frame);
+for(const y of [.6,1.6])box(0,y,-.165,1.084,.05,.05,frameSteel,frame);
+
+const frameDimensions=createFrameDimensions();equipment.add(frameDimensions);
+$('frame-dimensions').onclick=()=>{frameDimensions.visible=!frameDimensions.visible;$('frame-dimensions').setAttribute('aria-pressed',String(frameDimensions.visible));};
 
 const modules=[], pickTargets=[];
 for(const [index,x] of [-.38,0,.38].entries()) {
@@ -107,6 +113,12 @@ for(const [index,x] of [-.38,0,.38].entries()) {
   modules.push({group,body,shellMat,fibers,label,halo});
 }
 const services=createSkidServices();equipment.add(services.root);
+const frameBounds=new THREE.Box3().setFromObject(frame).getSize(new THREE.Vector3()).multiplyScalar(1000).round();
+const frameDetails={material:'SUS316',widthMm:frameBounds.x,depthMm:frameBounds.z,heightMm:frameBounds.y,connection:`架體外尺寸 W ${frameBounds.x} × D ${frameBounds.z} × H ${frameBounds.y} mm`,idBasis:'目前架體模型外包尺寸，不含架外管件與儀表',note:'架體及支撐橫桿先採 SUS316，數量 1 組。型鋼壁厚、焊接與載重設計待確認。'};
+services.items.push({tag:'SKID-001',type:'frame',name:'SKID 架體與支撐',g:frame,details:frameDetails});
+frame.traverse(o=>{if(o.isMesh){o.userData.serviceTag='SKID-001';services.targets.push(o);}});
+$('frame-size').textContent=frameDetails.connection;
+if(import.meta.env.DEV)window.__ufFrame=()=>({dimensions:frameBounds.toArray(),visible:frameDimensions.visible&&equipment.visible,members:frame.children.length});
 
 let flowGroup=new THREE.Group();scene.add(flowGroup);
 let flows=[],mode='filter',selected=null,section=false;
@@ -153,8 +165,8 @@ const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2();let down=[0,0]
 renderer.domElement.addEventListener('pointerdown',e=>down=[e.clientX,e.clientY]);
 renderer.domElement.addEventListener('pointerup',e=>{if(Math.hypot(e.clientX-down[0],e.clientY-down[1])>6)return;const r=renderer.domElement.getBoundingClientRect();pointer.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);raycaster.setFromCamera(pointer,camera);const hit=raycaster.intersectObjects(pickTargets)[0];if(singleView){const p=raycaster.intersectObjects(single.targets)[0];if(p)selectPart(p.object.userData.part);}else {const hits=raycaster.intersectObjects([...pickTargets,...services.targets]);const first=hits[0];if(first?.object.userData.serviceTag)selectService(first.object.userData.serviceTag);else if(first)selectModule(first.object.userData.module);}});
 let selectedService=null;
-const types={pipe:'原圖管段／軟管',extension:'新增連接段',fitting:'管件',valve:'氣動閥',instrument:'儀表'};
-function spanLabel(o){return o.details.estimatedLengthMm===undefined?'依型錄選型':`約 ${o.details.estimatedLengthMm} mm`;}
+const types={frame:'SKID 架體',pipe:'原圖管段／軟管',extension:'新增連接段',fitting:'管件',valve:'氣動閥',instrument:'儀表'};
+function spanLabel(o){return o.type==='frame'?'1 組（外尺寸見下方）':o.details.estimatedLengthMm===undefined?'依型錄選型':`約 ${o.details.estimatedLengthMm} mm`;}
 function selectService(tag){const o=services.items.find(x=>x.tag===tag);if(!o)return;selectedService=o;services.select(tag);$('service-name').textContent=`${tag} · ${o.name}`;$('service-material').textContent=o.details.material;$('service-span').textContent=o.details.spanMm===undefined?'—':`${o.details.spanMm} mm`;$('service-cut').textContent=spanLabel(o);$('service-spec').textContent=o.details.od?`外徑 ${o.details.od} / 內徑 ${o.details.id} / 壁厚 ${o.details.wallMm} mm。${o.details.standard}。${o.details.rating}。${o.details.idBasis}。`:o.details.unit?`單位 ${o.details.unit}；量程依選型；讀值 —（未連線）。${o.details.connection}`:o.details.connection;$('service-source').hidden=!o.details.sourceUrl;$('service-source').href=o.details.sourceUrl||'#';$('service-source').textContent=o.details.sourceTitle||'';$('service-note').textContent=o.details.note;$('service-focus').hidden=false;document.querySelectorAll('[data-service]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.service===tag)));}
 function renderServiceList(){const filter=$('service-filter').value;const list=$('service-list');list.replaceChildren();services.items.filter(o=>filter==='all'||o.type===filter).forEach(o=>{const b=document.createElement('button');b.dataset.service=o.tag;b.setAttribute('aria-pressed',String(selectedService?.tag===o.tag));const tag=document.createElement('b');tag.textContent=o.tag;const label=document.createElement('span');label.textContent=o.name;const note=document.createElement('small');note.textContent=o.details.spanMm!==undefined?spanLabel(o):types[o.type];b.append(tag,label,note);b.onclick=()=>selectService(o.tag);list.appendChild(b);});$('service-count').textContent=`${list.childElementCount} 個項目`;}
 $('service-filter').onchange=renderServiceList;renderServiceList();
@@ -163,7 +175,7 @@ lengthGroups.forEach(([name,predicate])=>{const rows=services.items.filter(o=>Nu
 
 $('service-focus').onclick=()=>{if(!selectedService)return;const bounds=new THREE.Box3().setFromObject(selectedService.g),center=bounds.getCenter(new THREE.Vector3());const distance=Math.max(.5,bounds.getSize(new THREE.Vector3()).length()*2.4);const direction=camera.position.clone().sub(controls.target).normalize();controls.minDistance=.15;controls.target.copy(center);camera.position.copy(center).addScaledVector(direction,distance);controls.autoRotate=false;$('rotate').setAttribute('aria-pressed','false');controls.update();};
 $('service-tags').onclick=()=>{const on=$('service-tags').getAttribute('aria-pressed')!=='true';$('service-tags').setAttribute('aria-pressed',String(on));services.showBadges(on);};
-function downloadMaterials(pipeOnly=false){const rows=[['編號','分類','名稱','數量','材質（暫定）','模型跨度mm','估算長度mm（取整10mm）','管外徑mm','管內徑mm','儀表單位','讀值','規格狀態','管壁厚mm','管材標準','參考型號','接管規格','壓力條件','尺寸依據','來源網址','資料查核日期'],...services.items.filter(o=>!pipeOnly||o.details.wallMm!==undefined).map(o=>[o.tag,types[o.type],o.name,1,o.details.material,o.details.spanMm??'',o.details.estimatedLengthMm??'',o.details.od??'不適用（非管段）',o.details.id??'不適用（非管段）',o.details.unit??'不適用',o.type==='instrument'?'未連線':'不適用',o.details.note,o.details.wallMm??'不適用（非管段）',o.details.standard??'依製品選型',o.details.reference??'未指定品牌型號',o.details.connection??'依製品選型',o.details.rating??'依製品選型',o.details.idBasis??'接管規格不等同於閥體／管件內外徑',o.details.sourceUrl??'不適用',o.details.specChecked??'不適用'])];const csv='\ufeff'+rows.map(row=>row.map(cell=>'"'+String(cell).replaceAll('"','""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=pipeOnly?'UF0915E_pipe_dimensions_REFERENCE.csv':'UF0915E_SKID_materials_PROVISIONAL.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+function downloadMaterials(pipeOnly=false){const rows=[['編號','分類','名稱','數量','材質（暫定）','模型跨度mm','估算長度mm（取整10mm）','管外徑mm','管內徑mm','儀表單位','讀值','規格狀態','管壁厚mm','管材標準','參考型號','接管規格','壓力條件','尺寸依據','來源網址','資料查核日期','架體寬W mm','架體深D mm','架體高H mm'],...services.items.filter(o=>!pipeOnly||o.details.wallMm!==undefined).map(o=>[o.tag,types[o.type],o.name,1,o.details.material,o.details.spanMm??'',o.details.estimatedLengthMm??'',o.details.od??'不適用（非管段）',o.details.id??'不適用（非管段）',o.details.unit??'不適用',o.type==='instrument'?'未連線':'不適用',o.details.note,o.details.wallMm??'不適用（非管段）',o.details.standard??'依製品選型',o.details.reference??'未指定品牌型號',o.details.connection??'依製品選型',o.details.rating??'依製品選型',o.details.idBasis??'接管規格不等同於閥體／管件內外徑',o.details.sourceUrl??'不適用',o.details.specChecked??'不適用',o.details.widthMm??'不適用',o.details.depthMm??'不適用',o.details.heightMm??'不適用'])];const csv='\ufeff'+rows.map(row=>row.map(cell=>'"'+String(cell).replaceAll('"','""')+'"').join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=pipeOnly?'UF0915E_pipe_dimensions_REFERENCE.csv':'UF0915E_SKID_materials_PROVISIONAL.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 $('download-materials').onclick=()=>downloadMaterials();$('download-pipes').onclick=()=>downloadMaterials(true);
 if(import.meta.env.DEV)window.__ufServices=()=>services.items.map(o=>({tag:o.tag,type:o.type,details:o.details,meshes:o.g.children.filter(x=>x.isMesh).length}));
 const observer=new ResizeObserver(()=>{const {width,height}=container.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);camera.aspect=width/height;camera.fov=width<650&&!singleView?48:35;camera.updateProjectionMatrix();});observer.observe(container);
