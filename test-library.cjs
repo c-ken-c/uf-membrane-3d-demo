@@ -1,0 +1,27 @@
+const { chromium } = require('C:/Users/User/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+
+(async () => {
+  const browser = await chromium.launch({ headless: true, args: ['--use-angle=swiftshader', '--enable-webgl'] });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 1050 } });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('http://127.0.0.1:5189/library.html', { waitUntil: 'networkidle' });
+  if (await page.locator('#product-select option').count() !== 33) throw new Error('Expected 24 UF and 9 MBR variants');
+  await page.selectOption('#product-select', 'UF-1020ET');
+  if ((await page.locator('#length-value').innerText()) !== '2,230 mm') throw new Error('UF-1020ET length mismatch');
+  await page.locator('#explode-model').click();
+  await page.waitForTimeout(700);
+  await page.locator('#transparent-model').click();
+  if ((await page.locator('#transparent-model').getAttribute('aria-pressed')) !== 'true') throw new Error('Section toggle failed');
+  await page.screenshot({ path: 'X:/Codex/Projects/Memstar/memstar-products-3d/renders/product-library-desktop.png', fullPage: true });
+  await page.selectOption('#product-select', 'UF-0717E');
+  if (!(await page.locator('#accuracy-note').innerText()).includes('沒有 7 吋爆炸圖')) throw new Error('7 inch warning missing');
+  await page.selectOption('#product-select', 'SMM2030T-92');
+  if (!(await page.locator('#envelope-value').innerText()).includes('2175 × 1280 × 4730')) throw new Error('MBR envelope mismatch');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: 'X:/Codex/Projects/Memstar/memstar-products-3d/renders/product-library-mobile.png', fullPage: true });
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Mobile horizontal overflow');
+  if (errors.length) throw new Error(errors.join('\n'));
+  console.log('PASS: 24 UF + 9 MBR variants, dimensions, explosion, section mode, warnings, responsive layout');
+  await browser.close();
+})().catch(error => { console.error(error); process.exit(1); });

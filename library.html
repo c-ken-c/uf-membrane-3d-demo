@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Memstar 3D Product Library</title>
+</head>
+<body>
+  <main class="library-shell">
+    <header class="library-header">
+      <div><span class="eyebrow">MEMSTAR / PRODUCT LIBRARY</span><h1>UF／MBR 互動產品庫</h1><p>依原始圖面建立；尺寸依據、近似項目及建模狀態分開標示。</p></div>
+      <a href="./">返回 UF Studio</a>
+    </header>
+    <section class="workspace">
+      <div class="viewport-wrap"><div id="library-viewport"></div><div class="viewport-note">拖曳旋轉 · 滾輪縮放</div></div>
+      <aside>
+        <label for="product-select">產品型號</label>
+        <select id="product-select"></select>
+        <dl class="facts">
+          <div><dt>系列</dt><dd id="family-value"></dd></div>
+          <div><dt>L1</dt><dd id="length-value"></dd></div>
+          <div><dt>外徑</dt><dd id="diameter-value"></dd></div>
+          <div><dt>外形／重量</dt><dd id="envelope-value">—</dd></div>
+          <div><dt>來源</dt><dd id="source-value"></dd></div>
+        </dl>
+        <div class="actions"><button id="explode-model">拆開</button><button id="assemble-model">組合</button></div>
+        <label for="explode-level">拆解程度 <output id="explode-output">0%</output></label>
+        <input id="explode-level" type="range" min="0" max="100" value="0">
+        <button id="transparent-model" aria-pressed="false">透視膜核心</button>
+        <p id="accuracy-note" class="warning"></p>
+      </aside>
+    </section>
+    <section class="family-grid">
+      <article><b>6 inch UF</b><span>GS-TECH-115 / 120</span><p>8 個 E／ET／ED／EDT 型號；已有外形圖與爆炸圖。</p></article>
+      <article><b>7 inch UF</b><span>GS-TECH-118</span><p>UF-0717E／ET；目前僅有外形圖，爆炸結構先採共用近似。</p></article>
+      <article><b>9 inch UF</b><span>GS-TECH-119 / 122</span><p>一般與 IP 系列；既有 14 項、22 件精細模型保留。</p></article>
+      <article><b>10 inch UF</b><span>GS-TECH-116 / 121</span><p>UF-1010／1015／1020 E／ET；已有外形圖與爆炸圖。</p></article>
+      <article><b>MBR D-Type Splint</b><span>GS-TECH-015</span><p>兩份 DWG 已確認含原生 3DSOLID，正進行保留零件層級的轉換。</p></article>
+      <article><b>MBR D-Type Skid</b><span>GS-TECH-025</span><p>目前為 PDF overview；第一版會標示為展示近似，待尺寸補件。</p></article>
+    </section>
+  </main>
+  <script type="module" src="/src/library.js"></script>
+</body>
+</html>
