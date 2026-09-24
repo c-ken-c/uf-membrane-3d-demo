@@ -16,6 +16,13 @@
       <aside>
         <label for="product-select">產品型號</label>
         <select id="product-select"></select>
+        <div id="aeration-controls" hidden>
+          <div class="service-legend"><span class="water-key">● 水路</span><span class="air-key">● 氣路</span><span class="frame-key">● 架體</span></div>
+          <label for="aeration-select">膜下曝氣配置</label>
+          <select id="aeration-select"><option value="esas">Memstar ESAS 大氣泡曝氣盒</option><option value="perforated">Memstar 穿孔管（替代示意）</option></select>
+          <button id="aeration-focus">曝氣裝置近看</button>
+          <p id="aeration-description"></p>
+        </div>
         <dl class="facts">
           <div><dt>系列</dt><dd id="family-value"></dd></div>
           <div><dt>L1</dt><dd id="length-value"></dd></div>

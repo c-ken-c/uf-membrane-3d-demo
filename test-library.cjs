@@ -6,7 +6,7 @@ const { chromium } = require('C:/Users/User/.cache/codex-runtimes/codex-primary-
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('http://127.0.0.1:5189/library.html', { waitUntil: 'networkidle' });
-  if (await page.locator('#product-select option').count() !== 33) throw new Error('Expected 24 UF and 9 MBR variants');
+  if (await page.locator('#product-select option').count() !== 35) throw new Error('Expected 24 UF and 11 MBR variants');
   const initial = await page.evaluate(() => window.libraryInspect());
   if(initial.product !== 'UF-0915E' || initial.parts !== 22 || initial.ground) throw new Error('UF structure / ground regression');
   await page.locator('#explode-model').click();

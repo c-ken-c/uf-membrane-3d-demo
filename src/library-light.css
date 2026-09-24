@@ -6,4 +6,5 @@ select,button{background:#f7fafb;color:#24454c;border-color:#cbdade}button:hover
 .facts div{border-color:#e5ecee}.warning{background:#f7f6ef;color:#626455;border-color:#b2a366}
 .family-grid article{background:#fff;border-color:#dce5e8}.viewport-note{color:#647b84;pointer-events:none}
 #mbr-detail{margin-top:8px}button:disabled{opacity:.45;cursor:default}
+.service-legend{display:flex;gap:14px;margin:16px 0;font-size:13px}.water-key{color:#087e89}.air-key{color:#997000}.frame-key{color:#526888}#aeration-focus{margin-top:8px}#aeration-description{font-size:12px;line-height:1.6;color:#617780}.facts dd{overflow-wrap:anywhere}.viewport-wrap{max-height:900px;position:sticky;top:0}#aeration-controls[hidden]{display:none}
 @media(max-width:850px){.library-shell{padding:16px}.viewport-wrap{min-height:520px}aside{border-color:#d6e0e4}}
