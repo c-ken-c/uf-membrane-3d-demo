@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>產品庫 · 解鎖</title>
+<style id="gate-style">*{box-sizing:border-box}body{margin:0;background:#f3f5f6;color:#243b43;font-family:system-ui,sans-serif}.gate{max-width:460px;margin:12vh auto;padding:32px;background:white;border:1px solid #d6e0e4;border-radius:20px}h1{font-size:28px}p{line-height:1.7;color:#5c727a}label{display:block;margin-bottom:8px}input,button{font:inherit;width:100%;padding:13px;border-radius:8px;border:1px solid #b9cecf}button{margin-top:14px;background:#087d75;color:white;cursor:pointer}a{display:inline-block;color:#087d75;margin-top:16px}#status{min-height:28px;color:#a14033}button:disabled{opacity:.6}@media(max-width:520px){.gate{margin:8vh 16px}}</style></head>
+<body><main class="gate"><p>MEMSTAR / PRODUCT LIBRARY</p><h1>產品庫需要密碼</h1><p>輸入密碼查看 UF／MBR 互動產品。其他頁面仍可自由瀏覽。</p>
+<form id="unlock-form"><label for="password">產品庫密碼</label><input id="password" type="password" autocomplete="current-password" required><button id="unlock-button" type="submit">解鎖產品庫</button><p id="status" role="status" aria-live="polite"></p></form>
+<a href="./" id="return-studio">← 返回 UF Studio／其他頁面</a><noscript><p>解鎖需要 JavaScript；您仍可使用上方連結返回其他頁面。</p></noscript></main>
+<script>
+const form=document.querySelector('#unlock-form'),status=document.querySelector('#status'),button=document.querySelector('#unlock-button');
+const bytes=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+form.addEventListener('submit',async event=>{
+ event.preventDefault();button.disabled=true;status.textContent='正在解鎖…';
+ let payload;
+ try{
+  const response=await fetch('./library.enc.json',{cache:'no-store'});if(!response.ok)throw new Error('load');
+  payload=await response.json();
+ }catch{status.textContent='內容暫時無法載入，請稍後重試，或返回其他頁面。';button.disabled=false;return;}
+ let content;
+ try{
+  const material=await crypto.subtle.importKey('raw',new TextEncoder().encode(document.querySelector('#password').value),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:bytes(payload.salt),iterations:payload.iterations,hash:'SHA-256'},material,{name:'AES-GCM',length:256},false,['decrypt']);
+  const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:bytes(payload.iv)},key,bytes(payload.ciphertext));
+  content=JSON.parse(new TextDecoder().decode(plain));
+ }catch{status.textContent='密碼不正確，請重新輸入。';button.disabled=false;document.querySelector('#password').focus();return;}
+ document.querySelector('#password').value='';
+ document.querySelector('#gate-style').remove();
+ const style=document.createElement('style');style.textContent=content.css;document.head.append(style);
+ document.body.innerHTML=content.body;
+ const lock=document.createElement('button');lock.id='lock-library';lock.textContent='重新上鎖';lock.style.width='auto';lock.onclick=()=>location.reload();document.querySelector('.library-header').append(lock);
+ const script=document.createElement('script');script.textContent=content.js;document.body.append(script);document.title='Memstar 3D Product Library';
+});
+// No password, decrypted data or unlocked flag is persisted in browser storage.
+addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
+</script></body></html>
