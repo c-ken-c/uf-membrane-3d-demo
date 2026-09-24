@@ -1,0 +1,9 @@
+:root{color:#243b43;background:#f3f5f6;color-scheme:light}
+.library-header p,.family-grid p{color:#5c727a}.library-header a,.eyebrow,.family-grid span{color:#087d75}
+.workspace{background:#f0f3f5;border-color:#d6e0e4;box-shadow:0 12px 40px #25434a08}
+aside{background:#fff;border-color:#d6e0e4}label,.facts dt{color:#617780}
+select,button{background:#f7fafb;color:#24454c;border-color:#cbdade}button:hover{background:#e7f4f1}button[aria-pressed=true]{background:#d4eee8;border-color:#258b7e}
+.facts div{border-color:#e5ecee}.warning{background:#f7f6ef;color:#626455;border-color:#b2a366}
+.family-grid article{background:#fff;border-color:#dce5e8}.viewport-note{color:#647b84;pointer-events:none}
+#mbr-detail{margin-top:8px}button:disabled{opacity:.45;cursor:default}
+@media(max-width:850px){.library-shell{padding:16px}.viewport-wrap{min-height:520px}aside{border-color:#d6e0e4}}

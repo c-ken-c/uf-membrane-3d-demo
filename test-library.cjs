@@ -7,6 +7,11 @@ const { chromium } = require('C:/Users/User/.cache/codex-runtimes/codex-primary-
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('http://127.0.0.1:5189/library.html', { waitUntil: 'networkidle' });
   if (await page.locator('#product-select option').count() !== 33) throw new Error('Expected 24 UF and 9 MBR variants');
+  const initial = await page.evaluate(() => window.libraryInspect());
+  if(initial.product !== 'UF-0915E' || initial.parts !== 22 || initial.ground) throw new Error('UF structure / ground regression');
+  await page.locator('#explode-model').click();
+  await page.waitForTimeout(1200);
+  await page.screenshot({path:'X:/Codex/Projects/Memstar/memstar-products-3d/renders/library-light-uf.png'});
   await page.selectOption('#product-select', 'UF-1020ET');
   if ((await page.locator('#length-value').innerText()) !== '2,230 mm') throw new Error('UF-1020ET length mismatch');
   await page.locator('#explode-model').click();
@@ -18,6 +23,12 @@ const { chromium } = require('C:/Users/User/.cache/codex-runtimes/codex-primary-
   if (!(await page.locator('#accuracy-note').innerText()).includes('沒有 7 吋爆炸圖')) throw new Error('7 inch warning missing');
   await page.selectOption('#product-select', 'SMM2030T-92');
   if (!(await page.locator('#envelope-value').innerText()).includes('2175 × 1280 × 4730')) throw new Error('MBR envelope mismatch');
+  if((await page.evaluate(()=>window.libraryInspect())).fiberMeshes !== 92) throw new Error('Missing fiber modules');
+  await page.locator('#mbr-detail').click();
+  if((await page.evaluate(()=>window.libraryInspect())).fiberMeshes !== 1) throw new Error('Single module view failed');
+  await page.waitForTimeout(500);
+  await page.screenshot({path:'X:/Codex/Projects/Memstar/memstar-products-3d/renders/library-light-mbr.png'});
+  await page.locator('#mbr-detail').click();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: 'X:/Codex/Projects/Memstar/memstar-products-3d/renders/product-library-mobile.png', fullPage: true });
   if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error('Mobile horizontal overflow');
